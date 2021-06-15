@@ -1,101 +1,158 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace helloworld1
+namespace Calculadora
 {
     class Program
-    {
-        static void Main(string[] args)
+    { 
+        
+        enum Menu { Soma = 1, Subtracao, Multiplicacao, Divisao, Potencia, Raiz, Sair }  //Criação do menu e seus parâmetros. Enum começa do num 0, para mudar isso precisa atribuir um numero a ele.
+
+        static void Main(string[] args)         
         {
+            bool botaoSair = false;
+                while (!botaoSair) //Lê-se como: enquanto o usuario NÃO(!) escolher botaoSair, exiba o menu
+                {
+                Console.WriteLine("Selecione uma opção:");
+                Console.WriteLine("1-Soma   2-Subtração   3-Multiplicação   4-Divisão   5-Potência   6-Raiz   7-Sair");
 
-            int[] valores = { 20, 30, 40, 50 };
-            {
-                Console.WriteLine(valores[1]);
-                Console.ReadLine();
-            }
-
-
-            /*
-
-            // exercicio de if/else
+                
+                Menu opcao = (Menu)int.Parse(Console.ReadLine());  //Captura entrada do usuário. Declara var, transforma a entrada em int e a aplica no Menu (Cast).
 
 
-            int num1 = 25;
-            Console.WriteLine(num1);
+                switch (opcao)
+                {
+                    case Menu.Soma:
+                        Soma();
+                        break;
 
+                    case Menu.Subtracao:
+                        Subtracao();
+                        break;
 
+                    case Menu.Multiplicacao:
+                        Multiplicacao();
+                        break;
 
+                    case Menu.Divisao:
+                        Divisao();
+                        break;
 
-            Console.WriteLine("Digite sua idade");
+                    case Menu.Potencia:
+                        Potencia();
+                        break;
 
-            int idade = int.Parse(Console.ReadLine());
+                    case Menu.Raiz:
+                        Raiz();
+                        break;
 
-            if (idade <= 15)
-            {
-                Console.WriteLine("Inferior a 15");
-            }
-            else
-            {
-                Console.WriteLine("Superior a 15");
-            }
+                    case Menu.Sair:
+                        botaoSair = true;
+                        {
+                             Environment.Exit(0);  // é uma instrução de fechamento, embora não seja necessaria aqui.
+                        }
+                        break;
+                }
+                Console.WriteLine(opcao);
+                Console.Clear();
+                }
+        }
 
-            Console.ReadLine();
+        static void Soma()
+        {
+            Console.WriteLine("SOMA DE DOIS NÚMEROS");
 
-
-            //fim do exercicio de if/else
-
-            // início do exercicio de função e retorno
-
-
-
-
-
-            Console.WriteLine("Digite um número");
+            Console.WriteLine("Digite um número: ");
             int num1 = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Digite outro número");
+            Console.WriteLine("Digite outro número: ");
             int num2 = int.Parse(Console.ReadLine());
 
+            int resultado = num1 + num2;
 
-
-            int resultado = (num1 * num2);
-
-            Console.WriteLine("O resultado é: " + resultado);
-
-
-            int funcsoma = Soma(35, 50, 75);
-            Console.WriteLine(funcsoma);
+            Console.WriteLine($"O resultado é: {resultado}");
+            Console.WriteLine("Tecle ENTER para voltar");
             Console.ReadLine();
-
-            */
         }
 
-
-        /*
-        static int Soma(int a, int b, int c)
+        static void Subtracao()
         {
-            int resultado = a + b + c;
-            return resultado;
+            Console.WriteLine("SUBTRAÇÃO DE DOIS NÚMEROS");
 
+            Console.WriteLine("Digite um número: ");
+            int num1 = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite outro número: ");
+            int num2 = int.Parse(Console.ReadLine());
+
+            int resultado = num1 - num2;
+
+            Console.WriteLine($"O resultado é: {resultado}");
+            Console.WriteLine("Tecle ENTER para voltar");
+            Console.ReadLine();
         }
 
-    
-        // fim do exercicio de função e retorno
+        static void Multiplicacao()
+        {
+            Console.WriteLine("MULTIPLICAÇÃO DE DOIS NÚMEROS");
 
-        */
+            Console.WriteLine("Digite um número: ");
+            int num1 = int.Parse(Console.ReadLine());
 
+            Console.WriteLine("Digite outro número: ");
+            int num2 = int.Parse(Console.ReadLine());
 
+            int resultado = num1 * num2;
 
+            Console.WriteLine($"O resultado é: {resultado}");
+            Console.WriteLine("Tecle ENTER para voltar");
+            Console.ReadLine();
+        }
 
+        static void Divisao()
+        {
+            Console.WriteLine("DIVISÃO DE DOIS NÚMEROS");
 
+            Console.WriteLine("Digite um número: ");
+            float num1 = float.Parse(Console.ReadLine());
 
+            Console.WriteLine("Digite outro número: ");
+            float num2 = float.Parse(Console.ReadLine());
 
+            float resultado = num1 / num2;
+
+            Console.WriteLine($"O resultado é: {resultado}");
+            Console.WriteLine("Tecle ENTER para voltar");
+            Console.ReadLine();     
+        }
+
+        static void Potencia()
+        {
+            Console.WriteLine("POTÊNCIA DE UM NÚMERO");
+
+            Console.WriteLine("Digite a base: ");
+            int basepot = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite o expoente: ");
+            int expo = int.Parse(Console.ReadLine());
+
+            double resultado = Math.Pow(basepot, expo);  // Pow é o nome do cálculo de potencia dentro da biblioteca MATH.
+
+            Console.WriteLine($"O resultado é: {resultado}");
+            Console.WriteLine("Tecle ENTER para voltar");
+            Console.ReadLine();
+        }
+
+        static void Raiz()
+        {
+            Console.WriteLine("RAIZ DE UM NÚMERO");
+
+            Console.WriteLine("Digite o número: ");
+            int raiz = int.Parse(Console.ReadLine());
+            double resultado = Math.Sqrt(raiz);
+
+            Console.WriteLine($"O resultado é: {resultado}");
+            Console.WriteLine("Tecle ENTER para voltar");
+            Console.ReadLine();
+        }
     }
 }
-
-
-
-
