@@ -83,23 +83,22 @@ namespace Financeiro.BR.Dbo
         }
         public decimal CalculaRegra4(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
         {
-            var ValorCobranca = cadRegraCobranca.CrcValorCobranca;
-            var metrica = cadRegraCobranca.CrcValorMetrica;
-            var exc = cadRegraCobranca.CrcValorCobrancaExcedente;
+            var valorCobranca = cadRegraCobranca.CrcValorCobranca;
+            var valorMetrica = cadRegraCobranca.CrcValorMetrica;
+            var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
             decimal adicional = 0;
 
 
-            if (exc != null && valorMedido > metrica)
+            if (valorExcedente != null && valorMedido > valorMetrica)
             {
-                adicional = (valorMedido - metrica) * (exc.Value);
-                return ValorCobranca + adicional;
+                adicional = (valorMedido - valorMetrica) * (valorExcedente.Value);
+                return valorCobranca + adicional;
             }
             else
             {
-                return ValorCobranca;
+                return valorCobranca;
             }
         }
-
 
         public bool ValidaExcedente(CadRegraCobranca regraCobranca)
         {
