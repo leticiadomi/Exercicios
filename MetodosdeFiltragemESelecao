@@ -1,20 +1,10 @@
-using Financeiro.BR.Business;
-using Financeiro.Core.BR.Interface.Dbo;
-using Financeiro.Core.DA.Dbo;
-using Financeiro.DTO.Domain.Dbo;
-using Financeiro.DTO.Domain.Financeiro;
-using System.Collections.Generic;
-using System.Linq;
+     public List<CadRegraCobranca> FiltraRegrasPorMetrica(int ctplcId, int cmsId)
+        {
+            var regrasFiltradas = this.Get().Where(x => x.CtplcId == ctplcId && x.CmsId == cmsId);
 
-namespace Financeiro.BR.Dbo
-{
-    public class CadRegraCobrancaBR : BusinessRules<CadRegraCobranca>, ICadRegraCobrancaBR
-    {
-        private readonly ICadRegraCobrancaDA _cadRegraCobrancaDA;
-        public CadRegraCobrancaBR(ICadRegraCobrancaDA cadRegraCobrancaDA) : base(cadRegraCobrancaDA) => _cadRegraCobrancaDA = cadRegraCobrancaDA;
-     
-        
-        
+            return regrasFiltradas.ToList();
+        }
+
         public List<CadRegraCobranca> SelecionaRegras(List<CadRegraCobranca> regras, decimal valorMedido)
         {
             var item1 = regras.Where(x => x.CrcValorMetrica < valorMedido).OrderBy(x => x.CrcValorMetrica).First();
@@ -33,12 +23,8 @@ namespace Financeiro.BR.Dbo
                 return result;
             }
         }
-        public List<CadRegraCobranca> FiltraRegrasPorMetrica(int ctplcId, int cmsId)
-        {
-                var regrasFiltradas = this.Get().Where(x => x.CtplcId == ctplcId && x.CmsId == cmsId);
 
-                return regrasFiltradas.ToList();
-        }
+        #region CALCULAREGRA
 
         public decimal CalculaRegra(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
         {
@@ -88,48 +74,63 @@ namespace Financeiro.BR.Dbo
             var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
             decimal adicional = 0;
 
-            //Se valorExcedente for DIFERENTE de nulo E valorMedido for MAIOR que valorMetrica faça:
+
             if (valorExcedente != null && valorMedido > valorMetrica)
             {
                 adicional = (valorMedido - valorMetrica) * (valorExcedente.Value);
                 return valorCobranca + adicional;
             }
-            //senão retorna o valorCobranca apenas
             else
             {
                 return valorCobranca;
             }
         }
-
-        public bool ValidaExcedente(CadRegraCobranca regraCobranca)
+        public decimal? CalculaRegra5(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
         {
-            //Se valor e tipo de cobrança estiverem preenchidos
-            if (regraCobranca.CrcValorCobrancaExcedente != null && regraCobranca.CtcIdExcedente != null)
-            {
-                return true;
-            }
-            //Se valor e tipo de cobrança não estiverem preenchidos
-            if (regraCobranca.CrcValorCobrancaExcedente == null && regraCobranca.CtcIdExcedente == null)
-            {
-                return true;
-            }
-            return false;
+            var valorCobranca = cadRegraCobranca.CrcValorCobranca;
+            var valorMetrica = cadRegraCobranca.CrcValorMetrica;
+            var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
+            decimal? adicional = (valorMedido - valorMetrica) * valorExcedente;
+
+            decimal? calculo = valorMetrica < valorMedido ? adicional : valorCobranca;
+            return calculo;
         }
 
-        public bool UsuarioValido(string usuario)
+        public decimal CalculaRegra6(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
         {
-            return !string.IsNullOrEmpty(usuario);
+            var valorCobranca = cadRegraCobranca.CrcValorCobranca;
+            var valorMetrica = cadRegraCobranca.CrcValorMetrica;
+            var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
+            decimal adicional = ((valorMedido - valorMetrica) * valorExcedente.Value + valorCobranca);
 
+            decimal calculo = valorMetrica < valorMedido ? adicional : valorCobranca;
+            return calculo;
         }
-
-        public string RetornaUsuarioTratado(string usuario)
+        public decimal CalculaRegra7(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
         {
-            return usuario?.Trim();
-        }
+            var valorCobranca = cadRegraCobranca.CrcValorCobranca;
+            var valorMetrica = cadRegraCobranca.CrcValorMetrica;
+            var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
+            decimal valorComAdicional = (valorMedido - valorMetrica) * (valorExcedente == null ? 0 : (decimal)valorExcedente);
 
-        public bool UsuarioNaoVazio(CadRegraCobranca regraCobranca)
-        {
-            throw new System.NotImplementedException();
+            decimal calculo = valorMetrica < valorMedido ? valorComAdicional : valorCobranca;
+            return calculo;
         }
-    }
-}
+        public decimal CalculaRegra8(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
+        {
+
+
+            return cadRegraCobranca.CrcValorMetrica < valorMedido ? ((valorMedido - cadRegraCobranca.CrcValorMetrica) * (cadRegraCobranca.CrcValorCobrancaExcedente == null ? 0 : (decimal)cadRegraCobranca.CrcValorCobrancaExcedente)) : cadRegraCobranca.CrcValorCobranca;
+            
+        }
+        public decimal CalculaRegra9(CadRegraCobranca cadRegraCobranca, decimal valorMedido) => cadRegraCobranca.CrcValorMetrica < valorMedido ? ((valorMedido - cadRegraCobranca.CrcValorMetrica) * (cadRegraCobranca.CrcValorCobrancaExcedente == null ? 0 : (decimal)cadRegraCobranca.CrcValorCobrancaExcedente)) : cadRegraCobranca.CrcValorCobranca;
+        public decimal CalculaRegra10(CadRegraCobranca cadRegraCobranca, decimal valorMedido)
+        {
+            var valorCobranca = cadRegraCobranca.CrcValorCobranca;
+            var valorMetrica = cadRegraCobranca.CrcValorMetrica;
+            var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
+
+            return valorMetrica < valorMedido ? (valorMedido - valorMetrica) * (valorExcedente == null ? 0 : (decimal)valorExcedente) : valorCobranca;
+            
+        }
+        #endregion
