@@ -88,12 +88,13 @@ namespace Financeiro.BR.Dbo
             var valorExcedente = cadRegraCobranca.CrcValorCobrancaExcedente;
             decimal adicional = 0;
 
-
+            //Se valorExcedente for DIFERENTE de nulo E valorMedido for MAIOR que valorMetrica faça:
             if (valorExcedente != null && valorMedido > valorMetrica)
             {
                 adicional = (valorMedido - valorMetrica) * (valorExcedente.Value);
                 return valorCobranca + adicional;
             }
+            //senão retorna o valorCobranca apenas
             else
             {
                 return valorCobranca;
