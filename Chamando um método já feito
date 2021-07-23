@@ -1,0 +1,10 @@
+  public CadRegraCobranca SelecionaRegraAderente(List<CadRegraCobranca> regras, decimal valorMedido)
+        {
+           //Chamando um método já feito antes
+            var regrasSelecionadas = SelecionaRegras(valorMedido, regras);
+            foreach (var regra in regrasSelecionadas)
+            {
+
+            }
+            return null;
+        }
