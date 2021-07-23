@@ -1,0 +1,18 @@
+        public CadRegraCobranca SelecionaRegraAderente(List<CadRegraCobranca> regras, decimal valorMedido)
+        {
+            var regrasSelecionadas = SelecionaRegras(valorMedido, regras);
+            decimal menorValor = decimal.MaxValue;
+            foreach (var regra in regrasSelecionadas)
+            {
+                decimal valorAtual = CalculaRegra(regra, valorMedido);
+                //se o valor atual for menor que o menorValor(que eh o valor maximo de decimal) atribui ao menorValor o valorAtual.
+                if(valorAtual < menorValor)
+                {
+                    menorValor = valorAtual;
+                }
+
+            }
+            return null;
+        }
+        
+        //
