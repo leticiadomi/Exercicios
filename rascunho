@@ -1,0 +1,15 @@
+          metodo CalculaFatura com cefID teste
+          
+          //  var caso2 = _cadTemplateCobrancaDA.Get(x => x.CtplcDataInicioVigencia < hoje).OrderByDescending(x => x.CtplcDataInicioVigencia).FirstOrDefault();
+          //  var numeroTemplate = 0;
+          //
+          //  if (dataInicial < caso2.CtplcDataInicioVigencia.AddMonths(-2))
+          //  {
+          //      numeroTemplate = caso2.CtplcId;
+          //  }
+          //  else
+          //  {
+          //      numeroTemplate = caso1.CtplcId;
+          //
+          //  }
+          //  return CalculaFatura(cefId, numeroTemplate, dataInicial, dataFinal);
