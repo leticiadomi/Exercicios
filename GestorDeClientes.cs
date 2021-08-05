@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -12,7 +12,7 @@ namespace GestorDeClientes
         {
             public string nome;
             public string email;              //semelhante ao interface
-            public string cpf; //******
+            public int cpf; //******
         }
         static List<Cliente> clientes = new List<Cliente>();
 
@@ -50,37 +50,49 @@ namespace GestorDeClientes
         static void Adicionar()
         {
             Cliente cliente = new Cliente();
+
             Console.WriteLine("Cadastro de cliente");
             Console.WriteLine("Nome do cliente: ");
             cliente.nome = Console.ReadLine();
             Console.WriteLine("Email do cliente: ");
             cliente.email = Console.ReadLine();
             Console.WriteLine("CPF: ");
-            cliente.cpf = Console.ReadLine();
+            cliente.cpf = int.Parse(Console.ReadLine());
 
-            //adiciona à lista clientes a variavel cliente
-            clientes.Add(cliente);
-            Salvar();
+            if (cliente.email.Contains("@") && cliente.email.Contains(".com") && cliente.cpf.ToString().Length == 11)
+            {
+                //adiciona à lista clientes a variavel cliente
+                clientes.Add(cliente);
+                Salvar();
+                Console.WriteLine("Cadastro Realizado!");
+                Console.WriteLine("Tecle ENTER para sair");
+                Console.ReadLine();
 
-            Console.WriteLine("Cadastro Realizado!");
-            Console.WriteLine("Tecle ENTER para sair");
-            Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("Dados inválidos, tente novamente");
+                Console.WriteLine("Tecle ENTER para sair");
+                Console.ReadLine();
+
+            }
         }
 
         static void Listagem()
         {
             // se a quantidade de elementos de clientes for maior que zero...
-            if (clientes.Count > 0)
+            if (clientes.Count > 0)  //Count pode ser usado apenas em listas
             {
                 int id = 0;
                 Console.WriteLine("Lista de Clientes");
                 foreach (Cliente cliente in clientes)
                 {
-                    
+
                     Console.WriteLine($"ID: {id}");
                     Console.WriteLine($"Nome: {cliente.nome}");
                     Console.WriteLine($"Email: {cliente.email}");
                     Console.WriteLine($"CPF: {cliente.cpf}");
+                    Console.WriteLine("--------------------------------------------------------------------");
                     id++;
                 }
             }
@@ -114,9 +126,9 @@ namespace GestorDeClientes
                 if (clientes == null)
                 {
                     clientes = new List<Cliente>();
-                }              
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 clientes = new List<Cliente>();
             }
@@ -131,7 +143,7 @@ namespace GestorDeClientes
             if (id >= 0 && id < clientes.Count)
             {
                 clientes.RemoveAt(id);
-                
+
                 Salvar();
                 Console.WriteLine($"ID {id} removido com sucesso!");
                 Console.WriteLine("Aperte ENTER para voltar");
