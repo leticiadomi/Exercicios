@@ -1,158 +1,162 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Calculadora
+namespace GestorDeClientes
 {
     class Program
-    { 
-        
-        enum Menu { Soma = 1, Subtracao, Multiplicacao, Divisao, Potencia, Raiz, Sair }  //Criação do menu e seus parâmetros. Enum começa do num 0, para mudar isso precisa atribuir um numero a ele.
-
-        static void Main(string[] args)         
+    {
+        [System.Serializable]  //Permitirá que os dados da lista sejam salvos em arquivos
+        struct Cliente
         {
-            bool botaoSair = false;
-                while (!botaoSair) //Lê-se como: enquanto o usuario NÃO(!) escolher botaoSair, exiba o menu
+            public string nome;
+            public string email;              //semelhante ao interface
+            public int cpf; //******
+        }
+        static List<Cliente> clientes = new List<Cliente>();
+
+        enum Menu { Listagem = 1, Adicionar, Remover, Sair }
+        static void Main(string[] args)
+        {
+            Carregar();
+            bool escolheuSair = false;
+            while (!escolheuSair)
+            {
+                Console.WriteLine("Sistema de Clientes");
+                Console.WriteLine("1 - Listagem     2 - Adicionar    3 - Remover     4 - Sair");
+                int opcao = int.Parse(Console.ReadLine());
+                Menu opcaoEscolhida = (Menu)opcao;
+
+                switch (opcaoEscolhida)
                 {
-                Console.WriteLine("Selecione uma opção:");
-                Console.WriteLine("1-Soma   2-Subtração   3-Multiplicação   4-Divisão   5-Potência   6-Raiz   7-Sair");
-
-                
-                Menu opcao = (Menu)int.Parse(Console.ReadLine());  //Captura entrada do usuário. Declara var, transforma a entrada em int e a aplica no Menu (Cast).
-
-
-                switch (opcao)
-                {
-                    case Menu.Soma:
-                        Soma();
+                    case Menu.Listagem:
+                        Listagem();
                         break;
-
-                    case Menu.Subtracao:
-                        Subtracao();
+                    case Menu.Adicionar:
+                        Adicionar();
                         break;
-
-                    case Menu.Multiplicacao:
-                        Multiplicacao();
+                    case Menu.Remover:
+                        Remover();
                         break;
-
-                    case Menu.Divisao:
-                        Divisao();
-                        break;
-
-                    case Menu.Potencia:
-                        Potencia();
-                        break;
-
-                    case Menu.Raiz:
-                        Raiz();
-                        break;
-
                     case Menu.Sair:
-                        botaoSair = true;
-                        {
-                             Environment.Exit(0);  // é uma instrução de fechamento, embora não seja necessaria aqui.
-                        }
+                        escolheuSair = true;
                         break;
                 }
-                Console.WriteLine(opcao);
                 Console.Clear();
+            }
+        }
+
+        static void Adicionar()
+        {
+            Cliente cliente = new Cliente();
+
+            Console.WriteLine("Cadastro de cliente");
+            Console.WriteLine("Nome do cliente: ");
+            cliente.nome = Console.ReadLine();
+            Console.WriteLine("Email do cliente: ");
+            cliente.email = Console.ReadLine();
+            Console.WriteLine("CPF: ");
+            cliente.cpf = int.Parse(Console.ReadLine());
+
+            if (cliente.email.Contains("@") && cliente.email.Contains(".com") && cliente.cpf.ToString().Length == 11)
+            {
+                //adiciona à lista clientes a variavel cliente
+                clientes.Add(cliente);
+                Salvar();
+                Console.WriteLine("Cadastro Realizado!");
+                Console.WriteLine("Tecle ENTER para sair");
+                Console.ReadLine();
+
+            }
+            else
+            {
+                Console.WriteLine("Dados inválidos, tente novamente");
+                Console.WriteLine("Tecle ENTER para sair");
+                Console.ReadLine();
+
+            }
+        }
+
+        static void Listagem()
+        {
+            // se a quantidade de elementos de clientes for maior que zero...
+            if (clientes.Count > 0)  //Count pode ser usado apenas em listas
+            {
+                int id = 0;
+                Console.WriteLine("Lista de Clientes");
+                foreach (Cliente cliente in clientes)
+                {
+
+                    Console.WriteLine($"ID: {id}");
+                    Console.WriteLine($"Nome: {cliente.nome}");
+                    Console.WriteLine($"Email: {cliente.email}");
+                    Console.WriteLine($"CPF: {cliente.cpf}");
+                    Console.WriteLine("--------------------------------------------------------------------");
+                    id++;
                 }
-        }
-
-        static void Soma()
-        {
-            Console.WriteLine("SOMA DE DOIS NÚMEROS");
-
-            Console.WriteLine("Digite um número: ");
-            int num1 = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Digite outro número: ");
-            int num2 = int.Parse(Console.ReadLine());
-
-            int resultado = num1 + num2;
-
-            Console.WriteLine($"O resultado é: {resultado}");
-            Console.WriteLine("Tecle ENTER para voltar");
+            }
+            else
+            {
+                Console.WriteLine("Nenhum cliente cadastrado");
+            }
+            Console.WriteLine("Aperte ENTER para sair");
             Console.ReadLine();
         }
 
-        static void Subtracao()
+        static void Salvar()
         {
-            Console.WriteLine("SUBTRAÇÃO DE DOIS NÚMEROS");
+            // cria um novo fileStream chamado stream, que terá extensão .bat, e o modo de arquivo é "abrir ou criar"
+            FileStream stream = new FileStream("clientes.bat", FileMode.OpenOrCreate);
+            BinaryFormatter encoder = new BinaryFormatter();
 
-            Console.WriteLine("Digite um número: ");
-            int num1 = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Digite outro número: ");
-            int num2 = int.Parse(Console.ReadLine());
-
-            int resultado = num1 - num2;
-
-            Console.WriteLine($"O resultado é: {resultado}");
-            Console.WriteLine("Tecle ENTER para voltar");
-            Console.ReadLine();
+            encoder.Serialize(stream, clientes);
+            stream.Close();
         }
 
-        static void Multiplicacao()
+        static void Carregar()
         {
-            Console.WriteLine("MULTIPLICAÇÃO DE DOIS NÚMEROS");
+            FileStream stream = new FileStream("clientes.bat", FileMode.OpenOrCreate);
 
-            Console.WriteLine("Digite um número: ");
-            int num1 = int.Parse(Console.ReadLine());
+            try
+            {
+                BinaryFormatter encoder = new BinaryFormatter();
 
-            Console.WriteLine("Digite outro número: ");
-            int num2 = int.Parse(Console.ReadLine());
-
-            int resultado = num1 * num2;
-
-            Console.WriteLine($"O resultado é: {resultado}");
-            Console.WriteLine("Tecle ENTER para voltar");
-            Console.ReadLine();
+                clientes = (List<Cliente>)encoder.Deserialize(stream);
+                if (clientes == null)
+                {
+                    clientes = new List<Cliente>();
+                }
+            }
+            catch (Exception e)
+            {
+                clientes = new List<Cliente>();
+            }
+            stream.Close();
         }
 
-        static void Divisao()
+        static void Remover()
         {
-            Console.WriteLine("DIVISÃO DE DOIS NÚMEROS");
+            Console.WriteLine("Digite o ID do cliente que você deseja remover ");
+            int id = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Digite um número: ");
-            float num1 = float.Parse(Console.ReadLine());
+            if (id >= 0 && id < clientes.Count)
+            {
+                clientes.RemoveAt(id);
 
-            Console.WriteLine("Digite outro número: ");
-            float num2 = float.Parse(Console.ReadLine());
+                Salvar();
+                Console.WriteLine($"ID {id} removido com sucesso!");
+                Console.WriteLine("Aperte ENTER para voltar");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("ID inválido, tente novamente");
+                Console.ReadLine();
+            }
 
-            float resultado = num1 / num2;
 
-            Console.WriteLine($"O resultado é: {resultado}");
-            Console.WriteLine("Tecle ENTER para voltar");
-            Console.ReadLine();     
-        }
 
-        static void Potencia()
-        {
-            Console.WriteLine("POTÊNCIA DE UM NÚMERO");
-
-            Console.WriteLine("Digite a base: ");
-            int basepot = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Digite o expoente: ");
-            int expo = int.Parse(Console.ReadLine());
-
-            double resultado = Math.Pow(basepot, expo);  // Pow é o nome do cálculo de potencia dentro da biblioteca MATH.
-
-            Console.WriteLine($"O resultado é: {resultado}");
-            Console.WriteLine("Tecle ENTER para voltar");
-            Console.ReadLine();
-        }
-
-        static void Raiz()
-        {
-            Console.WriteLine("RAIZ DE UM NÚMERO");
-
-            Console.WriteLine("Digite o número: ");
-            int raiz = int.Parse(Console.ReadLine());
-            double resultado = Math.Sqrt(raiz);
-
-            Console.WriteLine($"O resultado é: {resultado}");
-            Console.WriteLine("Tecle ENTER para voltar");
-            Console.ReadLine();
         }
     }
 }
